@@ -26,7 +26,7 @@ Base de no monetario personas: gastospersona.dta
 
 En este programa se utilizan tres tipos de archivos, los cuales 
 están ubicados en las siguientes carpetas:
-
+ 
 *1) Bases originales: "C:\Pobreza 2016\originales"
 *2) Bases generadas: "C:\Pobreza 2016\Bases"
 *3) Bitácoras: "C:\Pobreza 2016\log"

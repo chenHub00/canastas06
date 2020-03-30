@@ -15,6 +15,21 @@ cap log close;
 *Para cambiar estas ubicaciones, se modifican los siguientes
 globals; 
 
+$bases
+$log
+$enigh
+$do
+
+*DTA
+global poblacionDTA = "$enigh\poblacion06.dta"
+global concentradoDTA = "$enigh\concentrado06.dta"
+global gastoDTA "$enigh\gasto06.dta"
+
+global alim_n_aportesDTA = "$temp\alim_n_Aportes_06.dta"
+global alim_g_aportesDTA = "$temp\alim_g_Aportes_06.dta"
+
+global EPR_CanastaDTA "$temp\EPR_Canasta_06.dta"
+
 
 capture close
 log using "$log\canastas2016.smcl", replace;
@@ -31,7 +46,6 @@ log using "$log\canastas2016.smcl", replace;
 
 * Paso 1.1: Construcción de requerimientos energéticos por hogar *         
           
- 
 * Referencias: 
 *	[1] CEPAL (2007) Principios y aplicación de las nuevas necesidades de energía según el 
 *	Comité de Expertos FAO/OMS 2004. Estudios estadísticos y prospectivos # 56. 
@@ -40,20 +54,17 @@ log using "$log\canastas2016.smcl", replace;
 *	Bases Fisiológicas, Tomo 1, Editorial Médica Panamericana, 
 *	Instituto Danone, México, D.F. 2005;
 
-
-
-
 *Unir bases de población y concentrado;
 
-use "$enigh\poblacion06.dta", clear ; 
+use "$poblacionDTA", clear ; 
 sort folio;
 save, replace;
 
-use "$enigh\concentrado06.dta", clear ; 
+use "$concentradoDTA", clear ; 
 gen rururb = cond(estrato=="1" | estrato=="2" | estrato=="3",0,1) ;
 keep folio hog rururb;
 sort folio;
-merge folio using "$enigh\poblacion06.dta";
+merge folio using "poblacionDTA";
 gen parent=substr(parentesco,1,1);
 destring parent, replace;
 drop if parent==4;
@@ -64,124 +75,20 @@ keep folio hog rururb edad sexo;
 destring edad sexo, replace;
 di in red "Requerimiento energetico por hogar rural y Urbano" ;
 
-gen req_cal_rururb = . ;
-replace req_cal_rururb = cond(sexo==1, 621, 523) if edad==0 & rururb==1 ;
-replace req_cal_rururb = cond(sexo==1, 943, 864) if edad==1 & rururb==1;
-replace req_cal_rururb = cond(sexo==1,1129,1048) if edad==2 & rururb==1;
-replace req_cal_rururb = cond(sexo==1,1249,1154) if edad==3 & rururb==1;
-replace req_cal_rururb = cond(sexo==1,1359,1242) if edad==4 & rururb==1;
-replace req_cal_rururb = cond(sexo==1,1393,1280) if edad==5 & rururb==1;
-replace req_cal_rururb = cond(sexo==1,1497,1383) if edad==6 & rururb==1;
-replace req_cal_rururb = cond(sexo==1,1508,1493) if edad==7 & rururb==1;
-replace req_cal_rururb = cond(sexo==1,1704,1515) if edad==8 & rururb==1;
-replace req_cal_rururb = cond(sexo==1,1874,1748) if edad==9 & rururb==1;
-replace req_cal_rururb = cond(sexo==1,2031,1893) if edad==10 & rururb==1;
-replace req_cal_rururb = cond(sexo==1,2134,1997) if edad==11 & rururb==1;
-replace req_cal_rururb = cond(sexo==1,2313,2146) if edad==12 & rururb==1;
-replace req_cal_rururb = cond(sexo==1,2514,2255) if edad==13 & rururb==1;
-replace req_cal_rururb = cond(sexo==1,2735,2316) if edad==14 & rururb==1;
-replace req_cal_rururb = cond(sexo==1,2951,2352) if edad==15 & rururb==1;
-replace req_cal_rururb = cond(sexo==1,3064,2417) if edad==16 & rururb==1;
-replace req_cal_rururb = cond(sexo==1,3221,2444) if edad==17 & rururb==1;
-replace req_cal_rururb = cond(sexo==1,2981,2412) if (edad>=18 & edad<=29) & rururb==1 ;
-replace req_cal_rururb = cond(sexo==1,2894,2333) if (edad>=30 & edad<=59) & rururb==1;
-replace req_cal_rururb = cond(sexo==1,2408,2091) if (edad>=60 & edad<=99) & rururb==1;
-replace req_cal_rururb = cond(sexo==1, 621, 523) if edad==0 & rururb==0 ;
-replace req_cal_rururb = cond(sexo==1, 943, 864) if edad==1 & rururb==0;
-replace req_cal_rururb = cond(sexo==1,1129,1048) if edad==2 & rururb==0;
-replace req_cal_rururb = cond(sexo==1,1249,1154) if edad==3 & rururb==0;
-replace req_cal_rururb = cond(sexo==1,1359,1242) if edad==4 & rururb==0;
-replace req_cal_rururb = cond(sexo==1,1393,1280) if edad==5 & rururb==0;
-replace req_cal_rururb = cond(sexo==1,1497,1383) if edad==6 & rururb==0;
-replace req_cal_rururb = cond(sexo==1,1508,1493) if edad==7 & rururb==0;
-replace req_cal_rururb = cond(sexo==1,1704,1515) if edad==8 & rururb==0;
-replace req_cal_rururb = cond(sexo==1,1874,1748) if edad==9 & rururb==0;
-replace req_cal_rururb = cond(sexo==1,2031,1893) if edad==10 & rururb==0;
-replace req_cal_rururb = cond(sexo==1,2134,1997) if edad==11 & rururb==0;
-replace req_cal_rururb = cond(sexo==1,2313,2146) if edad==12 & rururb==0;
-replace req_cal_rururb = cond(sexo==1,2514,2255) if edad==13 & rururb==0;
-replace req_cal_rururb = cond(sexo==1,2735,2316) if edad==14 & rururb==0;
-replace req_cal_rururb = cond(sexo==1,2951,2352) if edad==15 & rururb==0;
-replace req_cal_rururb = cond(sexo==1,3064,2417) if edad==16 & rururb==0;
-replace req_cal_rururb = cond(sexo==1,3221,2444) if edad==17 & rururb==0;
-replace req_cal_rururb = cond(sexo==1,2617,2116) if (edad>=18 & edad<=29) & rururb==0 ;
-replace req_cal_rururb = cond(sexo==1,2540,2047) if (edad>=30 & edad<=59) & rururb==0;
-replace req_cal_rururb = cond(sexo==1,2113,1836) if (edad>=60 & edad<=99) & rururb==0;
-
-
-recode req_* (.=0) ;
-
-collapse (sum) req_*, by(folio) ;
+* REQUERIMIENTOS DE NUTRIENTES RURAL Y URBANO
+do "$do\requerimientos_rururb2016.do"
 
 sort folio ;
 save "$bases\requerimientos_rururb.dta", replace ;
 
-************************************************************************;
-*Paso 1.2: Creación de la base de calorias y aportes; 
-************************************************************************;
-
-
-foreach i in "gasto" "nomonetario" { ;
-local labe = substr("`i'",1,1) ;
-
-di in red "----- Base de " "`i'" " -----" ;
-use "$enigh\\`i'06.dta", clear ;
-keep if (clave>="A001" & clave<="A247") ;
-
-di in red "Se excluyen las siguientes claves y los alimentos con cantidad cero:
-1) Sal: A191,
-2) Gastos relacionados con la preparación de alimentos: A210 y A211, 
-3) Despensas: A212,
-4) Alimento para animales: A213 y A214,
-5) Agua: A215 y
-6) Tabaco: A239, A240 y A241" ;
-drop if (clave=="A191") | (clave>="A210" & clave<="A215") | 
-(clave>="A239" & clave<="A241") ;
-drop if cantidad==0 ;
-
-
-di in red "Alimentos consumidos dentro y fuera del hogar" ;
-
-gen alim_fue = cond(clave>="A243" & clave<="A247",cantidad,0) ;
-gen alim_den = cond(clave>="A001" & clave<="A242",cantidad,0) ;
-
-
-di in red "Gasto trimestral dentro y fuera del hogar" ;
-
-gen gas_tri_f = cond(alim_fue>0 & alim_fue!=.,gas_tri,0) ;
-gen gas_tri_d = cond(alim_den>0 & alim_den!=.,gas_tri,0) ;
-
-sort clave ;
-merge clave using "$bases\Aportes.dta" ;
-tab _merge ;
-drop if _merge==2;
-drop _merge ;
-
-recode porcion cal (.=0) ;
-collapse (mean) precio porcion cal 
-     	   (sum) cantidad gas_tri* alim_*, by (folio clave) ;
-
-di in red "Calorías consumidas dentro del hogar" ;
-
-gen caloria_dh = (cal*porcion*cantidad*10) ;
-
-collapse (sum) gas_tri* alim_* cantidad *_dh , by(folio) ;
-
-foreach x in gas_tri gas_tri_f gas_tri_d alim_fue alim_den 
-	    caloria_dh  { ;
-	  rename `x' `x'_`labe' ;
-	  } ;
-compress ;
-sort folio ;
-save "$temp\alim_`labe'_Aportes_06.dta", replace ;
-} ;
-
+* APORTES BASADOS EN GASTO Y NO MONETARIO
+do "$do\alim_aportes2016"
 
 di in red "Se une la base de gasto monetario y no-monetario" ;
 
-use  "$temp\alim_g_Aportes_06.dta", replace ;
+use  "$alim_g_aportesDTA", replace ;
 sort folio ;
-merge folio using "$temp\alim_n_Aportes_06.dta" ;
+merge folio using "$alim_n_aportesDTA.dta" ;
 tab _merge ;
 drop _merge ;
 recode *_g *_n (.=0) ;
@@ -203,15 +110,15 @@ di in red "Alimentos consumidos fuera del hogar diarios" ;
 gen alim_fue_t = (alim_fue_g + alim_fue_n)/7 ;
 keep folio *_t ;
 sort folio ;
-save "$temp\consumo_Aportes_06.dta", replace ;
+save "$temp\consumo_Aportes_16.dta", replace ;
 
 
-use "$enigh\concentrado06.dta", clear ;
+use "$concentradoDTA", clear ;
 rename hog factor ;
 keep folio factor tam_hog estrato ingcor ;
 gen rururb = cond(estrato=="1" | estrato=="2" | estrato=="3",0,1) ;
 sort folio ;
-merge folio using "$temp\consumo_Aportes_06.dta" ;
+merge folio using "$temp\consumo_Aportes_16.dta" ;
 tab _merge ;
 keep if _merge==3 ;
 drop _merge ;
@@ -230,10 +137,8 @@ sort folio ;
 * Paso 1.3: Selección del Estrato de Referencia
 ************************************************************************;
 
- 
 * Alimentos fuera del hogar: imputación del costo por decil  *                   ;
          
-
 recode gas_ddh_t  gas_fdh_t (.=0);
 gen gas_tot= gas_ddh_t + gas_fdh_t;
 sort ictpc;
@@ -385,10 +290,7 @@ scalar list;
 di in red "Nacional llega en 45, Rural en 32 y Urbano en 41";
 
 
-save "$temp\EPR_Canasta_06.dta", replace;
-
-
-
+save "$EPR_CanastaDTA", replace;
 
 ************************************************************************;
 * Paso 1.4: Construcción de la canasta básica alimentaria a partir 
@@ -399,7 +301,7 @@ save "$temp\EPR_Canasta_06.dta", replace;
 	  
 di in red "Selección del estrato poblacional de referencia (EPR) Urbano";
 
-use "$temp\EPR_Canasta_06.dta", clear;
+use "$EPR_CanastaDTA", clear;
 keep if percentil_urb>=41 & percentil_urb<=60;
 
 
@@ -427,7 +329,7 @@ save  "$temp\Urbano_f.dta", replace;
  
 di in red "Selección del estrato poblacional de referencia (EPR) Rural "; 
 
-use "$temp\EPR_Canasta_06.dta", clear;
+use "$EPR_CanastaDTA", clear;
 keep if percentil_rur>=32 & percentil_rur<=51;
 
 
@@ -457,7 +359,7 @@ di in red "Limpieza de las bases de gasto y no-monetario para el análisis del
 			consumo del EPR";
 
 *Abrir base de gastos;
-use "$enigh\gasto06.dta", clear;
+use "$gastoDTA", clear;
 gen base=1;
 gen cvealim=substr(clave,1,1);
 keep if cvealim=="A";
@@ -564,103 +466,9 @@ sort clave;
 
 collapse (mean) cal_fh_prom tot_* freq cantidad gas_tri, by(clave);
 
-
 di in red "Rubros de alimentos y bebidas de la ENIGH 2006";
 
-gen rubros=1 if clave>="A001" & clave<="A006";
-replace rubros=2 if  clave>="A007" & clave<="A018";
-replace rubros=3 if  clave>="A019" & clave<="A020";
-replace rubros=4 if  clave>="A021" & clave<="A024";
-replace rubros=5 if  clave>="A025" & clave<="A037";
-replace rubros=6 if  clave>="A038" & clave<="A046";
-replace rubros=7 if  clave>="A047" & clave<="A056";
-replace rubros=8 if  clave>="A057" & clave<="A061";
-replace rubros=9 if  clave=="A062" ;
-replace rubros=10 if  clave>="A063" & clave<="A065";
-replace rubros=11 if  clave>="A066" & clave<="A067";
-replace rubros=12 if  clave>="A068" & clave<="A070";
-replace rubros=13 if  clave=="A071" ;
-replace rubros=14 if  clave>="A072" & clave<="A074";
-replace rubros=15 if  clave>="A075" & clave<="A081";
-replace rubros=16 if  clave>="A082" & clave<="A088";
-replace rubros=17 if  clave>="A089" & clave<="A092";
-replace rubros=18 if  clave>="A093" & clave<="A094";
-replace rubros=19 if  clave>="A095" & clave<="A096";
-replace rubros=20 if  clave>="A097" & clave<="A100";
-replace rubros=21 if  clave>="A101" & clave<="A104";
-replace rubros=22 if  clave>="A105" & clave<="A106";
-replace rubros=23 if  clave>="A107" & clave<="A132";
-replace rubros=24 if  clave>="A133" & clave<="A136";
-replace rubros=25 if  clave>="A137" & clave<="A141";
-replace rubros=26 if  clave>="A142" & clave<="A143";
-replace rubros=27 if  clave>="A144" & clave<="A146";
-replace rubros=28 if  clave>="A147" & clave<="A170";
-replace rubros=29 if  clave>="A171" & clave<="A172";
-replace rubros=30 if  clave>="A173" & clave<="A175";
-replace rubros=31 if  clave>="A176" & clave<="A177";
-replace rubros=32 if  clave>="A178" & clave<="A179";
-replace rubros=33 if  clave>="A180" & clave<="A182";
-replace rubros=34 if  clave>="A183" & clave<="A194";
-replace rubros=35 if  clave>="A195" & clave<="A197";
-replace rubros=36 if  clave>="A198" & clave<="A202";
-replace rubros=37 if  clave>="A203" & clave<="A204";
-replace rubros=38 if  clave>="A205" & clave<="A209";
-replace rubros=39 if  clave>="A210" & clave<="A211";
-replace rubros=40 if  clave=="A212";
-replace rubros=42 if  clave>="A215" & clave<="A222";
-replace rubros=43 if  clave>="A223" & clave<="A238";
-replace rubros=45 if  clave=="A242";
-replace rubros=46 if  clave>="A243" & clave<="A247";
-
-
-* Etiquetar rubros;
-label define rubros
-1 "Maíz "
-2 "Trigo "
-3 "Arroz "
-4 "Otros cereales "
-5 "Carne de res y ternera "
-6 "Carne de cerdo "
-7 "Carnes procesadas "
-8 "Carne de pollo "
-9 "Carnes procesadas de aves "
-10 "Otras carnes "
-11 "Pescados frescos "
-12 "Pescados procesados "
-13 "Otros pescados "
-14 "Mariscos "
-15 "Leche "
-16 "Quesos "
-17 "Otros derivados de la leche "
-18 "Huevos "
-19 "Aceites "
-20 "Grasas "
-21 "Tubérculos crudos o frescos "
-22 "Tubérculos procesados "
-23 "Verduras y legumbres frescas "
-24 "Verduras y legumbres procesadas "
-25 "Leguminosas "
-26 "Leguminosas procesadas "
-27 "Semilllas "
-28 "Frutas frescas "
-29 "Frutas procesadas "
-30 "Azúcar y mieles "
-31 "Café "
-32 "Té "
-33 "Chocolate "
-34 "Especies y aderezos "
-35 "Alimentos preparados para bebé "
-36 "Alimentos preparados para consumir en casa "
-37 "Alimentos diversos "
-38 "Dulces y postres "
-39 "Gastos relacionados con la elaboración de alimentos "
-40 "Gastos en alimentos y/o bebidas en paquete "
-42 "Bebidas no alcohólicas "
-43 "Bebidas alcohólicas "
-45 "Alimentos de organizaciones "
-46 "Alimentos y bebidas consumidas fuera del hogar "
-;
-label value rubros rubros;
+do "$do\rubrosENIGH06.do"
 
 *Frecuencia del consumo de alimentos;
 di in red "Porcentaje de la frecuencia de consumo de alimentos 
@@ -677,7 +485,6 @@ gen por_gas100=por_gas*100;
 
 
 *Criterios;
-
 
 *Criterio 1- Consumo de alimentos mayor al 10%;
 di in red "Criterio 1: que el porcentaje de la frecuencia de 
@@ -721,80 +528,10 @@ Mexicana NOM-043-SSA2-2005, Servicios básicos de salud. Promoción
 y educación para la salud en materia alimentaria. Criterios para 
 brindar orientación.";
 
-*Se escalan cantidades de algunos alimentos en el ámbito rural para 
-ajustar el consumo a los requerimientos nutricionales de ingesta
-de micronutrientes ;
-
-replace consumo = 200   if clave=="A004";
-replace consumo = 17 	if clave=="A025";
-replace consumo = 13.6 	if clave=="A031";
-replace consumo = 12.5 	if clave=="A034";
-replace consumo = 25.6 	if clave=="A057";
-replace consumo = 29.8 	if clave=="A059";
-replace consumo = 109.2 if clave=="A075";
-replace consumo = 30 	if clave=="A102";
-replace consumo = 36.2 	if clave=="A112";
-replace consumo = 61.6 	if clave=="A124";
-replace consumo = 58.5 	if clave=="A137";
-replace consumo = 20.6 	if clave=="A154";
-replace cal     = 50 	if clave=="A154";
-replace porcion = 0.62 	if clave=="A154";
-replace consumo = 23.7 	if clave=="A158";
-replace consumo = 22.8 	if clave=="A160";
-replace consumo = 29.8 	if clave=="A166";
-replace consumo = 18.33 if clave=="A173";
-
-gen req_cal_Rural=2253.791;
-
-di in red "Calorías";
-gen calorias= ((cal*porcion*consumo)/100) ;
-replace calorias=cal_fh_prom if clave=="A243";
-sum calorias  ;
-scalar Cal_esc=r(sum);
-local Cal=Cal_esc*100/req_cal_Rural;
-
-*Obtención del requerimiento energético Rural;
-di in red "Dadas estas cantidades, se alcanza el `Cal' por ciento 
-del requerimiento energético Rural";
-
-di in green "Se escalan de forma homogénea las cantidades para 
-alcanzar el requerimiento energético ";
-scalar esc_cant=req_cal_Rural/(Cal_esc);
-scalar list;
-
-replace consumo=consumo*esc_cant if clave!="A202" | rubros!=46;
-
-*Se elimina del análisis el café tostado soluble;
-drop if  clave=="A177";
-
-*Debido a la gran variedad de alimentos que se encuentran en la 
-clave "A202", se decidió darle el mismo tratamiento de las 
-comidas fuera del hogar;
-
-
-di in red "Cálculo de la adecuación de la Canasta Rural al requerimiento energético";
-gen calorias_esc= ((cal*porcion*consumo)/100) ;
-replace calorias_esc=cal_fh_prom if clave=="A243";
-replace calorias_esc=81.04532 if clave=="A202";
-
-sum calorias_esc  ;
-local Cal_Totales=r(sum);
-local Pje_Calorias=`Cal_Totales'*100/req_cal_Rural;
-
-
-di in red "Se agrupan las comidas fuera del hogar en un solo rubro";
-
-replace nombre="Alimentos y bebidas consumidas fuera del hogar" if clave=="A243";
-
-keep clave rubros nombre consumo calorias_esc;
-
-rename calorias_esc calorias_r;
-rename consumo consumo_r;
-gen id_rururb=1;
+do "$do\ajuste_micro_rural.do"
  
 sort clave;
 save "$temp\Componentes_Canasta_Rural.dta", replace;
-
 
 
 ***************************CANASTA URBANA******************************;
@@ -816,101 +553,7 @@ sort clave;
 
 collapse (mean) cal_fh_prom tot_* freq cantidad gas_tri, by(clave);
 
-gen rubros=1 if clave>="A001" & clave<="A006";
-replace rubros=2 if  clave>="A007" & clave<="A018";
-replace rubros=3 if  clave>="A019" & clave<="A020";
-replace rubros=4 if  clave>="A021" & clave<="A024";
-replace rubros=5 if  clave>="A025" & clave<="A037";
-replace rubros=6 if  clave>="A038" & clave<="A046";
-replace rubros=7 if  clave>="A047" & clave<="A056";
-replace rubros=8 if  clave>="A057" & clave<="A061";
-replace rubros=9 if  clave=="A062" ;
-replace rubros=10 if  clave>="A063" & clave<="A065";
-replace rubros=11 if  clave>="A066" & clave<="A067";
-replace rubros=12 if  clave>="A068" & clave<="A070";
-replace rubros=13 if  clave=="A071" ;
-replace rubros=14 if  clave>="A072" & clave<="A074";
-replace rubros=15 if  clave>="A075" & clave<="A081";
-replace rubros=16 if  clave>="A082" & clave<="A088";
-replace rubros=17 if  clave>="A089" & clave<="A092";
-replace rubros=18 if  clave>="A093" & clave<="A094";
-replace rubros=19 if  clave>="A095" & clave<="A096";
-replace rubros=20 if  clave>="A097" & clave<="A100";
-replace rubros=21 if  clave>="A101" & clave<="A104";
-replace rubros=22 if  clave>="A105" & clave<="A106";
-replace rubros=23 if  clave>="A107" & clave<="A132";
-replace rubros=24 if  clave>="A133" & clave<="A136";
-replace rubros=25 if  clave>="A137" & clave<="A141";
-replace rubros=26 if  clave>="A142" & clave<="A143";
-replace rubros=27 if  clave>="A144" & clave<="A146";
-replace rubros=28 if  clave>="A147" & clave<="A170";
-replace rubros=29 if  clave>="A171" & clave<="A172";
-replace rubros=30 if  clave>="A173" & clave<="A175";
-replace rubros=31 if  clave>="A176" & clave<="A177";
-replace rubros=32 if  clave>="A178" & clave<="A179";
-replace rubros=33 if  clave>="A180" & clave<="A182";
-replace rubros=34 if  clave>="A183" & clave<="A194";
-replace rubros=35 if  clave>="A195" & clave<="A197";
-replace rubros=36 if  clave>="A198" & clave<="A202";
-replace rubros=37 if  clave>="A203" & clave<="A204";
-replace rubros=38 if  clave>="A205" & clave<="A209";
-replace rubros=39 if  clave>="A210" & clave<="A211";
-replace rubros=40 if  clave=="A212";
-replace rubros=42 if  clave>="A215" & clave<="A222";
-replace rubros=43 if  clave>="A223" & clave<="A238";
-replace rubros=45 if  clave=="A242";
-replace rubros=46 if  clave>="A243" & clave<="A247";
-
-
-* Etiquetar rubros;
-label define rubros
-1 "Maíz "
-2 "Trigo "
-3 "Arroz "
-4 "Otros cereales "
-5 "Carne de res y ternera "
-6 "Carne de cerdo "
-7 "Carnes procesadas "
-8 "Carne de pollo "
-9 "Carnes procesadas de aves "
-10 "Otras carnes "
-11 "Pescados frescos "
-12 "Pescados procesados "
-13 "Otros pescados "
-14 "Mariscos "
-15 "Leche "
-16 "Quesos "
-17 "Otros derivados de la leche "
-18 "Huevos "
-19 "Aceites "
-20 "Grasas "
-21 "Tubérculos crudos o frescos "
-22 "Tubérculos procesados "
-23 "Verduras y legumbres frescas "
-24 "Verduras y legumbres procesadas "
-25 "Leguminosas "
-26 "Leguminosas procesadas "
-27 "Semilllas "
-28 "Frutas frescas "
-29 "Frutas procesadas "
-30 "Azúcar y mieles "
-31 "Café "
-32 "Té "
-33 "Chocolate "
-34 "Especies y aderezos "
-35 "Alimentos preparados para bebé "
-36 "Alimentos preparados para consumir en casa "
-37 "Alimentos diversos "
-38 "Dulces y postres "
-39 "Gastos relacionados con la elaboración de alimentos "
-40 "Gastos en alimentos y/o bebidas en paquete "
-42 "Bebidas no alcohólicas "
-43 "Bebidas alcohólicas "
-45 "Alimentos de organizaciones "
-46 "Alimentos y bebidas consumidas fuera del hogar "
-;
-label value rubros rubros;
-
+do "$do\rubrosENIGH2016.do"
 
 *Frecuencia del consumo de alimentos;
 di in red "Porcentaje de la frecuencia de consumo de alimentos 
@@ -969,76 +612,8 @@ Mexicana NOM-043-SSA2-2005, Servicios básicos de salud. Promoción
 y educación para la salud en materia alimentaria. Criterios para 
 brindar orientación.";
 
+do "$do\ajuste_micro_urbano"
 
-*Se escalan cantidades de algunos alimentos para ajustar las 
-recomendaciones nutricionales de ingesta de micronutrientes;
-replace consumo = 25.5     if clave=="A012";
-replace consumo = 33.5 	   if clave=="A013";
-replace consumo = 20.67863 if clave=="A025";
-replace consumo = 13.63469 if clave=="A034";
-replace consumo = 19.9	   if clave=="A042";
-replace consumo = 43.8 	   if clave=="A102";
-replace consumo = 41.5 	   if clave=="A112";
-replace consumo = 61.8 	   if clave=="A124";
-replace consumo = 49.6 	   if clave=="A137";
-replace consumo = 25.5 	   if clave=="A154";
-replace cal     = 50 	   if clave=="A154";
-replace porcion = 0.62 	   if clave=="A154";
-replace consumo = 29.3     if clave=="A158";
-replace consumo = 28.1 	   if clave=="A160";
-replace consumo = 34 	   if clave=="A166";
-replace consumo = 200 	   if clave=="A075";
-replace consumo = 55 	   if clave=="A218";
-
-gen req_cal_Urbano=2093.941;
-
-di in red "Calorías";
-gen calorias= ((cal*porcion*consumo)/100) ;
-replace calorias=cal_fh_prom if clave=="A243";
-sum calorias  ;
-scalar Cal_esc=r(sum);
-local Cal=Cal_esc*100/req_cal_Urbano;
-
-*Obtención del requerimiento energético Urbano;
-di in red "Dadas estas cantidades, se alcanza el `Cal' por ciento 
-del requerimiento energético Urbano";
-
-
-di in green "Se escalan de forma homogénea las cantidades para 
-alcanzar el requerimiento energético ";
-scalar esc_cant=req_cal_Urbano/(Cal_esc);
-scalar list;
-
-replace consumo=consumo*esc_cant if clave!="A202" | rubros!=46;
-
-di in red "Se elimina del análisis el café tostado soluble";
-drop if  clave=="A177";
-
-*Debido a la gran variedad de alimentos que se encuentran en 
-la clave "A202", se decidió darle el mismo tratamiento de las 
-comidas fuera del hogar;
-
-di in red "Cálculo de la adecuación de la Canasta Urbana al 
-requerimiento energético";
-gen calorias_esc= ((cal*porcion*consumo)/100) ;
-replace calorias_esc=cal_fh_prom if clave=="A243";
-replace calorias_esc=160.57 if clave=="A202";
-
-format  calorias_esc  consumo %9.2f;
-sum calorias_esc  ;
-local Cal_Totales=r(sum);
-local Pje_Calorias=`Cal_Totales'*100/req_cal_Urbano;
-
-replace nombre="Agua embotellada" if clave=="A215";
-di in red "Se agrupan las comidas fuera del hogar en un solo rubro";
-replace nombre="Alimentos y bebidas consumidas fuera del hogar" if clave=="A243";
-
-keep clave rubros nombre consumo calorias_esc;
-
-rename calorias_esc calorias_u;
-rename consumo consumo_u;
-gen id_rururb=0;
- 
 sort clave;
 
 save "$temp\Componentes_Canasta_Urbana.dta", replace;
