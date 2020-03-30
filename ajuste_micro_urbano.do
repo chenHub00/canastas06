@@ -1,4 +1,4 @@
-* ajuste_micro_urbano 
+#delimit ;
 
 *Se escalan cantidades de algunos alimentos para ajustar las 
 recomendaciones nutricionales de ingesta de micronutrientes;

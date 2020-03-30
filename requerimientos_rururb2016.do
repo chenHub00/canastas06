@@ -1,3 +1,4 @@
+#delimit ;
 
 gen req_cal_rururb = . ;
 replace req_cal_rururb = cond(sexo==1, 621, 523) if edad==0 & rururb==1 ;

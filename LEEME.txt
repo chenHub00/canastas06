@@ -1,0 +1,10 @@
+
+Orden 
+
+0. macros_dirs.do
+1. canasta_alimentaria16.do
+ _6_valoracion
+
+global gastoDTA "$enigh\gasto06.dta";
+global nomonetarioDTA "$enigh\nomonetario06.dta";
+

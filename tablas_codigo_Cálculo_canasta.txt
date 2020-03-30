@@ -1,0 +1,38 @@
+﻿
+ Paso 1.1: Construcci�n de requerimientos energ�ticos por hogar *     
+
+datos:
+- enigh\poblacion06.dta
+- enigh\concentrado06.dta
+
+resultados:
+- bases\requerimientos_rururb.dta
+
+
+*Paso 1.2: Creaci�n de la base de calorias y aportes;
+
+datos:
+- gasto, 
+- nomonetario
+- bases\Aportes
+
+resultados:
+- temp\alim_`labe'_Aportes_06.dta": labe = gasto, nomonetario
+
+
+consumo_Aportes_06.dta",
+
+
+datos:
+"$enigh\concentrado06.dta", ;
+"$temp\consumo_Aportes_06.dta" ;
+
+resultados:
+
+
+
+* Paso 1.3: Selecci�n del Estrato de Referencia
+
+
+* Paso 1.4: Construcci�n de la canasta b�sica alimentaria a partir 
+* del estrato poblacional de referencia rural y urbano* ;

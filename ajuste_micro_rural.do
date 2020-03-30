@@ -1,3 +1,5 @@
+#delimit ;
+
 *Se escalan cantidades de algunos alimentos en el ámbito rural para 
 ajustar el consumo a los requerimientos nutricionales de ingesta
 de micronutrientes ;
