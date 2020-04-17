@@ -38,7 +38,7 @@ save "$consumo_aportesDTA", replace ;
 use "$concentradoDTA", clear ;
 rename hog factor ;
 keep folio factor tam_hog estrato ingcor ;
-gen rururb = cond(estrato=="1" | estrato=="2" | estrato=="3",0,1) ;
+gen rururb = cond(estrato=="1" | estrato=="2" | estrato=="3",0,1) ; /*se repite en la seccion 1_1, ingcor no se usa en esa parte*/
 sort folio ;
 merge folio using "$consumo_aportesDTA" ;
 tab _merge ;

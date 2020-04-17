@@ -32,9 +32,11 @@ destring edad sexo, replace;
 di in red "Requerimiento energetico por hogar rural y Urbano" ;
 
 * REQUERIMIENTOS DE NUTRIENTES RURAL Y URBANO;
-do "$do\requerimientos_rururb06.do";
+do "$do\requerimientos_rururb.do";
+collapse (sum) req_*, by(folio) ;
 
 sort folio ;
 save "$bases\requerimientos_rururb.dta", replace ;
 
 
+	

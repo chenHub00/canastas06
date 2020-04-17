@@ -1,3 +1,4 @@
+#delimit ;
 ************************************************************************;
 * Paso 1.4: Construcción de la canasta básica alimentaria a partir 
 * del estrato poblacional de referencia rural y urbano* ;     
@@ -108,7 +109,6 @@ di in red "Cantidad total y gasto trimestral total por hogar";
 collapse (sum) cantidad gas_tri, by(folio clave);
  sort folio;
 save "$temp\monynomon_CANASTA_EPR.dta", replace;
-#delimit ;
 
 *Unión de bases;
 
