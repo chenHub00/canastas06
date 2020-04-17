@@ -1,8 +1,21 @@
+* en 16 los gastos estan separados por hogar o persona
+* en 06 estaban separados por gasto y no monetario
+
 
 Orden 
 
-0. macros_dirs.do
+0. macros_dirs.do /llamar desde 1, incluir $dirDo
 1. canasta_alimentaria16.do
+  _1_requerimientos_energeticos.do
+?SIN CAMBIO     requerimientos_rururb16
+  _2_calorias_aportes.do
+     aporte_sz.dta
+? cambios en clave en ENIGH (aumento, criterios SZ: media, mediana, etc.)
+     alim_aportes06.do
+? cambio en organizacion de bases de datos (personas y hogar, antes gasto y nomonetario) 
+
+    resultados: 
+       $temp\consumo_Aportes_06.dta
  _6_valoracion
 
 global gastoDTA "$enigh\gasto06.dta";
