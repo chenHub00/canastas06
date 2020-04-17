@@ -7,11 +7,11 @@ set more off;
 
 di in red "Se genera una base de precios rural y otra urbana";
 use "$concentradoDTA", replace;
-gen rururb = cond(estrato=="1" | estrato=="2" | estrato=="3",0,1) ;
+gen rururb = cond(estrato=="1" | estrato=="2" | estrato=="3",0,1) ; /* Se repite en seccion 1_1 y 1_2 */
 keep folio rururb hog;
 rename hog factor;
 sort folio;
-save "$temp\Identificador rururb_06.dta", replace;
+save "$temp\Identificador rururb_06.dta", replace; 
 
 use "$gastoDTA", clear;
 gen base=1;
