@@ -1,3 +1,4 @@
+#delimit ;
 clear ;
 set more off ;
 scalar drop _all;
@@ -7,7 +8,6 @@ Para cambiar estas ubicaciones, se modifican los siguientes
 globals (gl); 
 */
 
-#delimit ;
 
 *gl dir = "d:\Users\asistente.iidses\Documents\canastas\Canasta_alimentaria_y_no_alimentaria\Canasta_alimentaria_y_no_alimentaria";
 gl dir = "C:\Users\vicen\Documents\Canastas\Canasta_alimentaria_y_no_alimentaria\Canasta_alimentaria_y_no_alimentaria";
@@ -25,6 +25,7 @@ cap log close;
 log using "$log\revision_segmentado06.smcl", replace;
 
 ************************************************************;
+#delimit ;
 *DTA;
 global poblacionDTA = "$enigh\poblacion06.dta"; 
 * poblacion;
@@ -35,7 +36,7 @@ global gastoDTA "$enigh\gasto06.dta";
 global nomonetarioDTA "$enigh\nomonetario06.dta"; 
 * gastoshogar + gastospersona;
 
-* TEMPS, con ANIO en nombre;
+/* TEMPS, con ANIO en nombre;
 * "alim_`labe'_Aportes06.dta";
 global alim_n_aportesDTA = "$temp\alim_n_Aportes_06.dta"; 
 * alim_n_Aportes;
@@ -47,9 +48,9 @@ global consumo_aportesDTA = "$temp\consumo_Aportes_06.dta";
 
 global EPR_CanastaDTA "$temp\EPR_Canasta_06.dta"; 
 * EPR_Canasta;
+*/
 
-
-/* Do-files */
+/* Do-files 
 #delimit cr
 do "$do\1_1_requerimientos_energeticos.do"
 do "$do\1_2_calorias_aportes"
@@ -57,3 +58,5 @@ do "$do\1_3_seleccion_estrato"
 do "$do\1_4_construccion_cba"
 do "$do\1_5_canasta_basica_alimentaria"
 do "$do\1_6_valoracion"
+
+log close

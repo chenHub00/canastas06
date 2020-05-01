@@ -8,9 +8,9 @@ do "$do\alim_aportes06.do";
 
 di in red "Se une la base de gasto monetario y no-monetario" ;
 
-use  "$alim_g_aportesDTA", replace ;
+use  "$temp\alim_g_Aportes_06.dta", replace ;
 sort folio ;
-merge folio using "$alim_n_aportesDTA" ;
+merge folio using "$temp\alim_n_Aportes_06.dta" ;
 tab _merge ;
 drop _merge ;
 recode *_g *_n (.=0) ;
@@ -32,15 +32,19 @@ di in red "Alimentos consumidos fuera del hogar diarios" ;
 gen alim_fue_t = (alim_fue_g + alim_fue_n)/7 ;
 keep folio *_t ;
 sort folio ;
-save "$consumo_aportesDTA", replace ;
+save "$temp\consumo_Aportes_06.dta", replace ;
 
 
+
+#delimit ;
+capture log close;
+log using "$log\calorias_estratos.smcl", replace ;
 use "$concentradoDTA", clear ;
 rename hog factor ;
 keep folio factor tam_hog estrato ingcor ;
 gen rururb = cond(estrato=="1" | estrato=="2" | estrato=="3",0,1) ; /*se repite en la seccion 1_1, ingcor no se usa en esa parte*/
 sort folio ;
-merge folio using "$consumo_aportesDTA" ;
+merge folio using "$temp\consumo_Aportes_06.dta" ;
 tab _merge ;
 keep if _merge==3 ;
 drop _merge ;
@@ -54,4 +58,4 @@ drop if costo_cal==0;
 gen ictpc= (ingcor/tam_hog) ;
 sort folio ;
 
-
+log close

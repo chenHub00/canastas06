@@ -1,7 +1,10 @@
-#delimit ;
 ************************************************************************;
 * Paso 1.3: Selección del Estrato de Referencia
 ************************************************************************;
+
+#delimit ;
+capture log close;
+log using "$log\calorias_estratos.smcl", append; 
 
 * Alimentos fuera del hogar: imputación del costo por decil  *                   ;
          
@@ -59,7 +62,6 @@ gen tpc_caloria = (caloria_dh_t + caloria_fh_t)/tam_hog ;
 
 di in red "Coeficiente de Adecuación Energética (CA)" ;
 sort folio ;
-
 merge folio using "$bases\requerimientos_rururb.dta" ;
 tab _merge ;
 keep if _merge==3 ;
@@ -81,6 +83,8 @@ note("Fuente: estimaciones del CONEVAL con base en la ENIGH 2006", color(gs5) si
 xtitle("Coeficiente de adecuación energética", color(gs2) size(medium))
 ylabel(0 .2 .4 .6 .8 1,     gmax angle(horizontal))
 ytitle("Densidad", color(gs2) size(medium)) ;
+
+#delimit ;
 
 di in red "Percentiles nacional, rural y urbano de ingreso corriente per-cápita";
 sort ictpc;
@@ -134,7 +138,7 @@ local obs_urb= `k'+ 1 ;
 replace y1_urb= ca`k'_urb in `obs_urb' ;
 	            } ;
 
-
+#delimit ;
 tw (line y1_nac x1_nac in 2/82, lwidth(medthick) color(blue))
 (line y1_rur x1_rur in 2/82, lwidth(medthick) color(green))
 (line y1_urb x1_urb in 2/82, lwidth(medthick) color(orange)),
@@ -156,5 +160,6 @@ scalar list;
 di in red "Nacional llega en 45, Rural en 32 y Urbano en 41";
 
 
-save "$EPR_CanastaDTA", replace;
+save "$temp\EPR_Canasta_06.dta", replace;
 
+log close
